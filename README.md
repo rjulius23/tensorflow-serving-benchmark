@@ -14,6 +14,47 @@ Creating tensorflowservingbenchmark_server_1 ... done
 <b>2487.13826442827 requests/second</b>
 </pre>
 
+##### FastAPI (uvicorn, four workers, async)
+`docker-compose run fastapi-benchmark`
+<pre>
+Server Software:        uvicorn
+Server Hostname:        fastapi-client
+Server Port:            8002
+
+Document Path:          /prediction
+Document Length:        31 bytes
+
+Concurrency Level:      10
+Time taken for tests:   2.417 seconds
+Complete requests:      10000
+Failed requests:        0
+Non-2xx responses:      10000
+Total transferred:      1910000 bytes
+HTML transferred:       310000 bytes
+<b>Requests per second:    4137.41 [#/sec] (mean)</b>
+Time per request:       2.417 [ms] (mean)
+Time per request:       0.242 [ms] (mean, across all concurrent requests)
+Transfer rate:          771.72 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.0      0       0
+Processing:     1    2   1.1      2      11
+Waiting:        0    2   0.9      2      11
+Total:          1    2   1.1      2      12
+
+Percentage of the requests served within a certain time (ms)
+  50%      2
+  66%      3
+  75%      3
+  80%      3
+  90%      4
+  95%      4
+  98%      5
+  99%      6
+ 100%     12 (longest request)
+ </pre>
+
 ##### WSGI (gunicorn/falcon, four workers, sync)
 `docker-compose run wsgi-benchmark`
 <pre>
