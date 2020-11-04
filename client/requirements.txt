@@ -1,6 +1,0 @@
-grpcio-tools
-ujson
-falcon
-gunicorn
-tornado
-tensorflow==1.0

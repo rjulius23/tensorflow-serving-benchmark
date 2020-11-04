@@ -4,7 +4,7 @@ services:
 
   server:
     build:
-      context: server
+      context: server-code
       args:
         - MODEL_NAME=identity
         - SERVING_PORT=8500
@@ -16,7 +16,7 @@ services:
 
   wsgi-client:
     build:
-      context: client
+      context: client-code
       args:
         - CLIENT_PORT=8000
     command:
@@ -32,7 +32,7 @@ services:
 
   tornado-client:
     build:
-      context: client
+      context: client-code
       args:
         - CLIENT_PORT=8001
     command:
@@ -48,7 +48,7 @@ services:
 
   grpc-benchmark:
     build:
-      context: client
+      context: client-code
     command:
       python3 grpc_client.py --num_requests=10000 --max_concurrent=10
     environment:
@@ -58,9 +58,25 @@ services:
     links:
       - server
 
+  fastapi-client:
+    build:
+      context: client-code
+      args:
+        - CLIENT_PORT=8002
+    command:
+      uvicorn --workers=4 --host 0.0.0.0 --port 8002 fastapi_client:app
+    environment:
+      - MODEL_NAME=identity
+      - SERVING_HOST=server
+      - SERVING_PORT=8500
+    ports:
+      - "8002:8002"
+    links:
+      - server
+
   wsgi-benchmark:
     build:
-      context: client
+      context: client-code
     command:
       ab -n 10000 -c 10 http://wsgi-client:8000/prediction
     links:
@@ -69,9 +85,18 @@ services:
 
   tornado-benchmark:
     build:
-      context: client
+      context: client-code
     command:
       ab -n 10000 -c 10 http://tornado-client:8001/prediction
     links:
       - server
       - tornado-client
+  
+  fastapi-benchmark:
+    build:
+      context: client-code
+    command:
+      ab -n 10000 -c 10 http://tornado-client:8001/prediction
+    links:
+      - server
+      - fastapi-client
