@@ -1,13 +1,9 @@
 import uvicorn
-from datetime import datetime
 from fastapi import FastAPI, HTTPException
 import grpc
-from influxdb import InfluxDBClient
-import json
 import os
 from starlette.responses import RedirectResponse
 from tensorflow_serving.apis import predict_pb2
-from tensorflow_serving.apis import prediction_service_pb2_grpc
 import tensorflow as tf
 
 app = FastAPI()

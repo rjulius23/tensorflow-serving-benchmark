@@ -1,5 +1,9 @@
 version: '3'
 
+networks:
+  app-tier:
+    driver: bridge
+
 services:
 
   server:
@@ -13,6 +17,8 @@ services:
       - SERVING_PORT=8500
     ports:
       - "8500:8500"
+    networks:
+      - app-tier
 
   wsgi-client:
     build:
@@ -29,6 +35,8 @@ services:
       - "8000:8000"
     links:
       - server
+    networks:
+      - app-tier
 
   tornado-client:
     build:
@@ -45,6 +53,8 @@ services:
       - "8001:8001"
     links:
       - server
+    networks:
+      - app-tier
 
   grpc-benchmark:
     build:
@@ -57,6 +67,8 @@ services:
       - SERVING_PORT=8500
     links:
       - server
+    networks:
+      - app-tier
 
   fastapi-client:
     build:
@@ -73,6 +85,8 @@ services:
       - "8002:8002"
     links:
       - server
+    networks:
+      - app-tier
 
   wsgi-benchmark:
     build:
@@ -82,6 +96,8 @@ services:
     links:
       - server
       - wsgi-client
+    networks:
+      - app-tier
 
   tornado-benchmark:
     build:
@@ -91,12 +107,16 @@ services:
     links:
       - server
       - tornado-client
+    networks:
+      - app-tier
   
   fastapi-benchmark:
     build:
       context: client-code
     command:
-      ab -n 10000 -c 10 http://tornado-client:8001/prediction
+      ab -n 10000 -c 10 http://fastapi-client:8002/prediction
     links:
       - server
       - fastapi-client
+    networks:
+      - app-tier
