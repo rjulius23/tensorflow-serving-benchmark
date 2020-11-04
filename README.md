@@ -4,6 +4,8 @@ and wanted to know the throughput of the native gRPC client compared to a REST-b
 client that forwards requests to the a gRPC client (which most people are likely
 to use for external-facing services).
 
+Updated to run with TF 2.3.
+
 ### Usage and Results
 ##### gRPC (async)
 `docker-compose run grpc-benchmark`
